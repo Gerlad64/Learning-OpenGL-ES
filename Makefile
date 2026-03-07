@@ -1,6 +1,6 @@
 # Configuraciones de compilación
 CC = gcc
-CFLAGS = -std=c23 -I./include
+CFLAGS = -std=gnu23 -I./include
 LIB_FLAGS = -lGL -ldl -lglfw
 
 
