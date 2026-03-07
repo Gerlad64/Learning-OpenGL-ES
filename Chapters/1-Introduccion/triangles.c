@@ -16,7 +16,13 @@
 
 #define BUFFER_OFFSET(offset)((void *)(offset))
 
-enum VAO_IDs { Triangles, NumVAOs };
+/*
+	Crea índices con enum para acceder a objetos de VAOs y Buffers.
+	por ejemplo, si VAO_IDs fuera { Triangles, Squares, ..., NumVAOs},
+	es equivalente a que Triangles sea 0, Squares sea 1, y así sucesivamente
+	hasta llegar a NumVAOs, que siempre será igual a la cantidad de objetos.
+*/
+enum VAO_IDs { Triangles, NumVAOs }; // Triangles == 0, NumVAOs == 1
 enum Buffer_IDs { ArrayBuffer, NumBuffers };
 enum Attrib_IDs { vPosition = 0 };
 
@@ -38,7 +44,8 @@ void init() {
         { -0.85,  0.90 }, 
     };
 
-    /*
+    /* void glCreateVertexArrays(GLsizei n, GLuint *arrays)
+       void glCreateBuffers(GLsizei n, GLuint *buffers)
         Llena los arrays VAOs y Buffers con identificadores numericos "names"
         para los objetos que guarda. O sea, el array VAOs guarda identificadores
         de "Vertex Arrays" y Buffers guarda identificadores de Buffers.
@@ -47,9 +54,8 @@ void init() {
     glCreateBuffers(NumBuffers, Buffers);
 
     /*
-        Reserva memoria suficiente para guardar datos asociados
-        al buffer entregado. En este caso, se guardan los datos de los 
-        vertices.
+        Reserva memoria en GPU  para guardar datos asociados
+        al buffer indicado, y copia los datos de 'vertices'.
 
         El último parámetro de tipo GLbitfield
         provee de manera adicional información sobre
@@ -60,7 +66,7 @@ void init() {
 		sizeof(vertices),       // tamaño "size" en bytes
 		vertices,               // datos "const void *data"
 	    0                       // No se selecciona ninguna opción
-    );                          // Podría ser GL_FOO | GL_BAR
+    );                          // Podría ser GL_FOO | GL_BAR | ...
     /*
         Cargar Vertex y Fragment shaders usando la estructura
         ShaderInfo y función LoadShaders de LoadShaders.h
@@ -84,9 +90,12 @@ void init() {
         Pasarle datos al vertex program
     */
     /*
-        El siguiente comando le dice a OpenGl cómo recuperar datos de la memoria,
-        siempre que los datos esten organizados de manera contigua o intercalada 
-        en memoria (no así como las listas enlazadas).
+	Configura cómo ls GPU debe leer los datos del buffer guardados en memoria 
+	para el atributo 'vPosition'. Funcionará siempre que los datos esten organizados 
+	de manera contigua o intercalada (no así como las listas enlazadas).
+
+	Esta configuración **se guarda en el VAO activo** y será usada por la GPU durante
+    	los draw calls (glDrawArrays, glDrawElements), no involucra a la CPU directamente.	
     */
     glVertexAttribPointer(
         vPosition,          // index: el valor de "location" dentro del shader, o sea, 
@@ -121,7 +130,7 @@ void display() {
 int main() {
     glfwInit(); // Inicializa glfw
 
-    GLFWwindow* window = glfwCreateWindow(640, 480, "My First Window", NULL, NULL); // configura una ventana
+    GLFWwindow* window = glfwCreateWindow(640, 480, "My First Triangles", NULL, NULL); // configura una ventana
     glfwMakeContextCurrent(window); // establece que "window" es el contexto actual, o sea, que todos los comandos de OpenGL son hacia esta ventana   
     gl3wInit();
 
