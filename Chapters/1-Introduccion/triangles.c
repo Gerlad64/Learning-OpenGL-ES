@@ -80,10 +80,9 @@ void init() {
     glUseProgram(program);
 
     /*
-        """Activa""" algun objeto en particular por el id pasado.
+        """Activa""" el vertex array con el id entregado 
     */
     glBindVertexArray(VAOs[Triangles]);
-    glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
 
     /* 
         Pasarle datos al vertex program
