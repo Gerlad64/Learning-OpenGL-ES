@@ -1,8 +1,8 @@
 /**
     Vertex Program triangles.vert del programa triangles.c
 */
-// Utiliza GLSL asociado a OpenGL 4.5
-#version 450 core 
+// Utiliza GLSL asociado a OpenGL 4.1
+#version 410 core 
 
 /*
     Definimos una variable de shader "shader variable".

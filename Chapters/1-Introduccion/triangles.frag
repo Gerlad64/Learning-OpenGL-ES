@@ -1,4 +1,4 @@
-#version 450 core
+#version 410 core
 
 /*
     Se usa f como prefijo de "fragment"
