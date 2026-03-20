@@ -128,6 +128,14 @@ void display() {
 int main() {
     glfwInit(); // Inicializa glfw
 
+    /* Indica que la versión es la 4.1 (MAJOR.MINOR)*/
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    /* Pide usar OpenGL moderno*/
+    /* De momento no es necesario activarlo */
+    //glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
     GLFWwindow* window = glfwCreateWindow(640, 480, "My First Triangles", NULL, NULL); // configura una ventana
     glfwMakeContextCurrent(window); // establece que "window" es el contexto actual, o sea, que todos los comandos de OpenGL son hacia esta ventana   
     gl3wInit();
