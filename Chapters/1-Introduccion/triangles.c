@@ -44,14 +44,14 @@ void init() {
         { -0.85,  0.90 }, 
     };
 
-    /* void glCreateVertexArrays(GLsizei n, GLuint *arrays)
-       void glCreateBuffers(GLsizei n, GLuint *buffers)
+    /* void glGenArrays(GLsizei n, GLuint *arrays)
+       void glGenBuffers(GLsizei n, GLuint *buffers)
         Llena los arrays VAOs y Buffers con identificadores numericos "names"
         para los objetos que guarda. O sea, el array VAOs guarda identificadores
         de "Vertex Arrays" y Buffers guarda identificadores de Buffers.
     */
-    glCreateVertexArrays(NumVAOs, VAOs); 
-    glCreateBuffers(NumBuffers, Buffers);
+    glGenVertexArrays(NumVAOs, VAOs);
+    glGenBuffers(NumBuffers, Buffers);
 
     /*
         Reserva memoria en GPU  para guardar datos asociados
