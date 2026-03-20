@@ -61,12 +61,11 @@ void init() {
         provee de manera adicional información sobre
         cómo serán usados los datos guardados.
     */ 
-    glNamedBufferStorage(
-        Buffers[ArrayBuffer],   // "name" donde se van a guardar los datos
-		sizeof(vertices),       // tamaño "size" en bytes
-		vertices,               // datos "const void *data"
-	    0                       // No se selecciona ninguna opción
-    );                          // Podría ser GL_FOO | GL_BAR | ...
+
+    /* """Activa""" el array buffer por el id entregado */
+    glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
     /*
         Cargar Vertex y Fragment shaders usando la estructura
         ShaderInfo y función LoadShaders de LoadShaders.h
