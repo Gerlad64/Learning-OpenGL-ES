@@ -1,4 +1,4 @@
-#version 450 core 
+#version 410 core 
 
 #define TAU 6.283185307179586
 
