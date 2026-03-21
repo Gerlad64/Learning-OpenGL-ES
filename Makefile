@@ -1,7 +1,7 @@
 # Configuraciones de compilación
-CC = gcc
-CFLAGS = -std=gnu23 -I./include
-LIB_FLAGS = -lGL -ldl -lglfw
+CC = clang
+CFLAGS = -std=c23 -I./include -I/opt/homebrew/include
+LIB_FLAGS = -framework OpenGL -ldl -lglfw -L/opt/homebrew/lib
 
 
 # tags del Makefile
