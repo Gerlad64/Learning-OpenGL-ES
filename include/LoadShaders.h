@@ -7,7 +7,7 @@
 #ifndef __LOAD_SHADERS_H__
 #define __LOAD_SHADERS_H__
 
-#include <GL/gl.h> 
+#include <OpenGL/gl.h> 
 // Nota: Dependiendo de tu cargador (GLEW, GLAD, GL3W), 
 // tal vez necesites incluir ese header aquí en lugar de GL/gl.h
 
