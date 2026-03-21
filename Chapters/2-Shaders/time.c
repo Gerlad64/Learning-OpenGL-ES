@@ -87,15 +87,11 @@ void init() {
 		{ 0.0, 0.0 }, 
 	};
 
-	glCreateVertexArrays(NumVAOs, VAOs); 
-	glCreateBuffers(NumBuffers, Buffers);
+	glGenVertexArrays(NumVAOs, VAOs);
+	glGenBuffers(NumBuffers, Buffers);
 
-	glNamedBufferStorage(
-		Buffers[ArrayBuffer],
-	sizeof(vertices),
-	vertices,
-		0
-	);						
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     	ShaderInfo shaders[] = {
 		{ GL_VERTEX_SHADER,   "Chapters/2-Shaders/time.vert" },
@@ -109,7 +105,6 @@ void init() {
 	timeLoc = glGetUniformLocation(program, "time");
 
 	glBindVertexArray(VAOs[Points]);
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
 
 	glVertexAttribPointer(
 		vPosition,		  
@@ -134,6 +129,12 @@ void display() {
 
 int main() {
 	glfwInit(); // Inicializa glfw
+
+	// configurar versión
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// configura una ventana
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Oscilating Dot", NULL, NULL); 
