@@ -10,9 +10,6 @@
  USADAS PARA PASAR ESTABLECER EL VALOR DE UNA VARIABLE
  `uniform` DEL VERTEX PROGRAM.
 
-	FLAGS DE COMPILACIÓN NECESARIAS: 
-	-lGL -ldl -lglfw
-
 ***************************************************************/
 
 #include <stdio.h>
@@ -41,8 +38,8 @@ GLint timeLoc; // indice "time" en el vertex shader
 
 /* 
  FUNCIÓN A SER EJECUTADA EN CADA CICLO.
- EN CADA FRAMES ACTUALIZA LA VARIABLE 
- `time` DEL VERTEX SHADER.
+ EN CADA FRAME ACTUALIZA EL UNIFORM
+ `time` DEL SHADER.
  
 */
 void pass_time() {
@@ -98,8 +95,8 @@ void init() {
 	);						
 
     	ShaderInfo shaders[] = {
-		{ GL_VERTEX_SHADER,   "Chapters/2-Shaders/time.vert" },
-		{ GL_FRAGMENT_SHADER, "Chapters/2-Shaders/time.frag" },
+		{ GL_VERTEX_SHADER,   "Chapters/2-Shaders/uniform.vert" },
+		{ GL_FRAGMENT_SHADER, "Chapters/2-Shaders/uniform.frag" },
 		{ GL_NONE, NULL },
 	};
 	program = LoadShaders(shaders);
