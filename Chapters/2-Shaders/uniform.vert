@@ -2,6 +2,7 @@
 
 #define TAU 6.283185307179586
 
+// uniform time recibido desde el programa
 uniform float time;
 
 /* igual que en triangles.vert del capítulo 1*/ 
