@@ -5,7 +5,7 @@ LIB_FLAGS = -framework OpenGL -ldl -lglfw -L/opt/homebrew/lib -lm
 
 
 # tags del Makefile
-KNOWN_COMMANDS := build run vim clean
+KNOWN_COMMANDS := build run vim clean cp
 # Parsear Argumentos
 ARGS := $(filter-out $(KNOWN_COMMANDS),$(MAKECMDGOALS))
 CHAPTER := $(word 1,$(ARGS))
@@ -48,6 +48,13 @@ OBJ = $(patsubst %.c,$(OBJ_DIR)/%.o,$(SRC))
 VIM_FILE := $(wildcard Chapters/$(CHAPTER)-*/$(TARGET))
 NUM_FILES := $(words $(VIM_FILE))
 
+# cp
+CP_ORIGIN := $(wildcard Chapters/$(CHAPTER)-*/$(TARGET))
+CP_TARGET := $(word 3,$(ARGS))
+CP_DEST_DIR := $(wildcard Chapters/$(CHAPTER)-*)
+CP_EXISTS := $(words $(wildcard $(CP_DEST_DIR)/$(CP_TARGET)))
+CP_NUM_FILES := $(words $(CP_ORIGIN))
+
 # tag por defecto
 all: help
 
@@ -77,6 +84,21 @@ else
 	@vim "$(VIM_FILE)"
 endif
 
+cp:
+ifeq ($(CP_NUM_FILES),0)
+	@echo "No se encontraron archivos"
+else ifneq ($(CP_NUM_FILES),1)
+	@echo "Debes copiar los archivos uno por uno."
+else ifeq ($(CP_EXISTS), 0)
+	@cp "$(CP_ORIGIN)" "$(CP_DEST_DIR)/$(CP_TARGET)"; \
+	echo "$(CP_TARGET) creado."
+else
+	@read -p "¿Estas seguro que quieres sobreescribir el archivo $(CP_TARGET)? [y/n] " response; \
+	if [ "$$response" = "y" ]; then \
+		cp "$(CP_ORIGIN)" "$(CP_DEST_DIR)/$(CP_TARGET)"; \
+		echo "$(CP_TARGET) sobreescrito."; \
+	fi
+endif
 
 # Limpiar todo
 clean:
