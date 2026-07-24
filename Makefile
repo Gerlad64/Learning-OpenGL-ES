@@ -1,7 +1,7 @@
 # Configuraciones de compilación
 CC = gcc
 CFLAGS = -std=gnu23 -I./include
-LIB_FLAGS = -lGL -ldl -lglfw
+LIB_FLAGS = -lGL -ldl -lglfw -lm
 
 
 # tags del Makefile
