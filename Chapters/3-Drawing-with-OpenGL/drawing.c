@@ -19,6 +19,14 @@ ESTE EJEMPLO UTILIZA LAS SIGUIENTES FUNCIONES DE OPENGL:
 *	glDrawArraysInstanced	: Cómo glDrawArrays con la capacidad de dibujar multiples 
 				  instancias de una primitiva.
 
+ADICIONALMENTE, EL EJEMPLO INTRODUCE LA MATRIZ DE MODELO (TRANSFORMACIONES) Y LA MATRIZ DE PERSPECTIVA, DONDE PARA OBTENER UNA INSTANCIA DE 
+ESTAS SE LLAMAN A LAS FUNCIONES `transformation_mat` y `projection_mat` DE LA LIBRERÍA <MATH/matrices.h>.
+
+PARA ENTENDER CÓMO SE DEDUCE LA MATRIZ DE PROYECCIÓN SE RECOMIENDAN
+ESTOS VIDEOS:
+*	https://youtu.be/LhQ85bPCAJ8?list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA
+*	https://youtu.be/md3jFANT3UM?list=PLA0dXqQjCx0S04ntJKUftl6OaOgsiwHjA
+
 ***************************************************************/
 
 #include <stdio.h>
@@ -45,8 +53,6 @@ GLuint VAOs[NumVAOs];
 GLuint Buffers[NumBuffers];
 GLuint render_model_matrix_loc; // uniform location de model_matrix en el shader
 GLuint render_proj_matrix_loc; // uniform location de projection_matrix en el shader
-
-constexpr GLuint NumVertices = 4;
 
 
 static const GLfloat positions[] = {
@@ -105,6 +111,9 @@ void init_buffers() {
 
 
 void init_vertices() {
+
+	/**----------- Inicializar Vertices --------*/
+	/** (No cambia con respecto a ejemplos anteriores) */
  
 	glCreateVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[Triangles]);
@@ -134,7 +143,9 @@ void init_vertices() {
 }
 
 void init_uniform_locations(GLuint program) {
+	// location de la matriz de modelo
 	render_model_matrix_loc = glGetUniformLocation(program, "model_matrix");
+	// location de la matriz de proyección en perspectiva
 	render_proj_matrix_loc = glGetUniformLocation(program, "projection_matrix");
 }
 
@@ -153,7 +164,15 @@ void init() {
 	init_uniform_locations(program);
 
 	mat4 proj_matrix;
-	perspective_mat(proj_matrix, 70.0f, 640.0f / 480.0f, 0.1f, 100.0f);
+	// se usa matriz de proyección en perspectiva
+	// como el ejemplo del libro
+	perspective_mat(
+		proj_matrix, 	// dest  : matriz de destino
+		90.0f,		// fovy  : angulo de visión en y
+		640.0f / 480.0f,// aspect: relación de aspecto
+		0.1f, 		// near  : distancia del plano near
+		100.0f		// far	 : distancia del plano far
+	);
     	glUniformMatrix4fv(render_proj_matrix_loc, 1, GL_FALSE, proj_matrix);
 }
 
@@ -161,6 +180,11 @@ void draw_triangles() {
 
     	glBindVertexArray(VAOs[Triangles]);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[ebo]);
+
+	/* 
+	  Se define una matriz de 4x4 para llamar a las diferentes 
+	  funciones de dibujo
+	*/
 	
 	static mat4 model_matrix;
 
