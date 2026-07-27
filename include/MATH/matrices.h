@@ -12,7 +12,13 @@ static inline void translation_mat(mat4 dest, float x, float y, float z) {
     	dest[3] = 0; dest[7] = 0; dest[11] = 0; dest[15] = 1;
 }
 
-static inline void perspective_mat(mat4 dest, float fovy_deg, float aspect, float near_plane, float far_plane) {
+static inline void perspective_mat(
+	mat4 dest,
+	float fovy_deg,
+	float aspect,
+	float near_plane,
+	float far_plane
+) {
     float f = 1.0f / tanf(fovy_deg * (3.1415926535f / 360.0f));
     
     // Llenar todo con ceros primero
