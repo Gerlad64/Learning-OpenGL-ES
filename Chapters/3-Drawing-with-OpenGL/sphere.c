@@ -1,27 +1,14 @@
 /**************************************************************
- PROGRAMA BASADO EN LOS EJEMPLOS 3.9 AL 3.12 DEL LIBRO Y 
- AL CÓDIGO 03-instancing3.cpp DEL REPOSITORIO DE EJEMPLOS DEL LIBRO:
+PROGRAMA QUE DIBUJA UNA ESFERA, UTILIZADO MÁS ADELANTE EN EL PROGRAMA `stencil`
 
-* https://github.com/openglredbook/examples/blob/master/src/03-instancing3/03-instancing3.cpp
+ESTE EJEMPLO UTILIZA FUNCIONES YA ESTUDIADAS ANTES, A EXCEPCIÓN DE: 
+*	`glDisableVertexAttribArray`
+*	`glVertexAttrib3f`
+*	`glVertexAttrib4f` 
 
-DIBUJA MÚLTIPLES CUBOS ROTANDO Y MOVIENDOSE, MIENTRAS LA CÁMARA TAMBIÉN LO HACE.
+AUNQUE SU USO ES SIMPLE, MUESTRA UN  USO PRÁCTICO DE ESTAS.
 
-ESTE EJEMPLO MUESTRA CÓMO UTILIZAR INSTANCING PARA DIBUJAR MÚLTIPLES INSTANCIAS
-DE UN MODELO CON POCAS LLAMADAS A LA API.
-
-LO NOVEDOSO DE ESTE PROGRAMA ES LA INICIALIZACIÓN Y ACTUALIZACIÓN DE LAS MATRICES.
-ADEMÁS, ESTA IMPLEMENTACIÓN DE INSTANCING PERMITE QUE EL SHADER NO DEPENDA DE LAS
-INSTANCIAS, POR LO QUE SE PUEDE USAR CON OTROS OBJETOS QUE NO LO USEN.
-
-ESTE EJEMPLO UTILIZA LAS SIGUIENTES FUNCIONES DE OPENGL:
-*	glVertexAttribDivisor	: Permite especificar cada cuanto se consume
-				  un elemento de un buffer o array especificado.
-				  - 0 indica que se consume uno por vértice,
-				  - 1 indica que se consume uno por instancia.
-*	glDrawArraysInstanced	: Mostrada en un programa anterior
-
-ESTAS SE LLAMAN A LAS FUNCIONES `transformation_mat` y `projection_mat` DE LA LIBRERÍA <MATH/matrices.h>.
-
+PARA CREAR LA ESFERA, SE INTRODUCE LA LIBRARÍA <MATH/shapes.h>
 
 ***************************************************************/
 
@@ -63,10 +50,15 @@ GLuint render_proj_matrix_loc;
 
 constexpr int q = 32; // quality
 
+// cantidad de vertices
 constexpr int vertex_count = SPHERE_VERTEX_COUNT(q, q);
+// cantidad de componentes de vertices (positions_len == normals_len)
 constexpr int vertex_component_count = 3 * SPHERE_VERTEX_COUNT(q,q);
+// tamaño en bytes que ocupa vertex_component_count
 constexpr int vertex_component_size = sizeof(float) * vertex_component_count;
+// cantidad de datos (posicions_len + normals_len)
 constexpr int vertex_data_count      = 2 * vertex_component_count;
+// tamaño en bytes de vertex_data_count
 constexpr int vertex_buffer_size     = sizeof(float) * vertex_data_count; 
 
 constexpr int index_count = SPHERE_INDEX_COUNT(q,q);
@@ -74,6 +66,9 @@ constexpr int index_buffer_size = sizeof(unsigned short) * index_count;
 
 
 void init_buffers() {
+	// Se crea un solo arreglo con datos de vertices
+	// y uno solo con datos de índices de modo que vivan
+	// en el stack en el tiempo de vida de init_buffers
 	GLfloat vertex_data[vertex_data_count];
 	GLushort indices[index_count];
 
@@ -135,13 +130,14 @@ void init_vertices() {
 	glEnableVertexAttribArray(normal_loc);
 
 	glDisableVertexAttribArray(color_loc);
+	// establece color azulado para todos los vertices
 	glVertexAttrib3f(color_loc, 0.0f, 0.364f, 0.636f);
 
 	glDisableVertexAttribArray(matrix_loc + 0);
 	glDisableVertexAttribArray(matrix_loc + 1);
 	glDisableVertexAttribArray(matrix_loc + 2);
 	glDisableVertexAttribArray(matrix_loc + 3);
-
+	// establece la matriz de identidad para la matriz de modelo
 	glVertexAttrib4f(matrix_loc + 0, 1.0f, 0.0f, 0.0f, 0.0f);
 	glVertexAttrib4f(matrix_loc + 1, 0.0f, 1.0f, 0.0f, 0.0f);
 	glVertexAttrib4f(matrix_loc + 2, 0.0f, 0.0f, 1.0f, 0.0f);
