@@ -37,7 +37,7 @@ OBJ_DIR = build/ObjectFiles
 BUILD_TARGET = $(BUILD_DIR)/$(TARGET)
 
 # Archivos a compilar
-LIB_SRC = lib/LoadShaders.c lib/gl3w.c
+LIB_SRC = $(shell find lib -name '*.c') #lib/LoadShaders.c lib/gl3w.c
 CH_SRC = $(wildcard Chapters/$(CHAPTER)-*/$(TARGET).c)
 SRC = $(CH_SRC) $(LIB_SRC)
 
