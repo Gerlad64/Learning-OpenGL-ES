@@ -58,25 +58,26 @@ static const GLfloat colors[] = {
 void init_buffers() {
 	
 
-    	glCreateBuffers(NumBuffers, Buffers);
-	glNamedBufferStorage(
-		Buffers[ArrayBuffer], //buffer a usar
+    	glGenBuffers(NumBuffers, Buffers);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);//buffer a usar
+	glBufferData(
+		GL_ARRAY_BUFFER,
 		sizeof(positions) + sizeof(colors), // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_DYNAMIC_STORAGE_BIT //flag para poder llenarlo después
+		GL_DYNAMIC_DRAW //flag para poder llenarlo después
 	);
 	
 	/* ----- COLOCAR POSICIONES Y COLORES EN EL BUFFER ----- */
 	
-	glNamedBufferSubData(
-		Buffers[ArrayBuffer], 	// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// data
 		0,			//offset
 		sizeof(positions), 	// tamaño
 		positions		// data
 	);
 	
-	glNamedBufferSubData(
-		Buffers[ArrayBuffer], 	// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// data
 		sizeof(positions),	//offset
 		sizeof(colors), 	// tamaño
 		colors			// data
@@ -85,7 +86,7 @@ void init_buffers() {
 
 void init_vertices() {
 	// Crear y enlazar VAO
-	glCreateVertexArrays(NumVAOs, VAOs); 
+	glGenVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[Square]);
 	// Enlazar el buffer para que glVertexAttribPointer lo use
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
@@ -139,6 +140,9 @@ void display() {
 
 int main() {
 	glfwInit(); // Inicializa glfw
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "My First Square", NULL, NULL);
 	glfwMakeContextCurrent(window);
