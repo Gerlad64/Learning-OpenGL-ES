@@ -47,7 +47,7 @@ guarda las variables en formato std140.
 De todos modos, es posible obtener el tamaño de la estructura
 usando glGetActiveUniformBlockiv, que guarda el tamaño en uboSize. */
 
-//uboSize;
+//GLuint uboSize;
 
 // Estructura de datos de ejemplo para pasarselos al shader
 typedef struct Uniforms {
@@ -67,9 +67,10 @@ void init_uniform_buffers(GLuint program) {
 	u.rotation = 1.4;
 	u.enabled = 1;
 
-	/*
-	glGetActiveUniformBlockiv(program, uboIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &uboSize)
-	*/
+	/**
+	uboIndex = glGetUniformBlockIndex(program, "Uniforms");	
+	glGetActiveUniformBlockiv(program, uboIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &uboSize);
+	*/	
 
 	/* 
 		Este segmento es independiente del programa (GLuint program).
@@ -105,14 +106,15 @@ void init_point(GLuint program) {
 		{ 0.0, 0.0 }, 
 	};
 
-	glCreateVertexArrays(NumVAOs, VAOs); 
-	glCreateBuffers(NumBuffers, Buffers);
+	glGenVertexArrays(NumVAOs, VAOs); 
+	glGenBuffers(NumBuffers, Buffers);
 
-	glNamedBufferStorage(
-		Buffers[ArrayBuffer],
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
+	glBufferData(
+		GL_ARRAY_BUFFER,
 		sizeof(vertices),
 		vertices,
-		0
+		GL_STATIC_DRAW
 	);
 
 	glBindVertexArray(VAOs[Points]);
@@ -153,6 +155,9 @@ void display() {
 
 int main() {
 	glfwInit(); // Inicializa glfw
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
 	// configura una ventana
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Transformed Dot", NULL, NULL); 

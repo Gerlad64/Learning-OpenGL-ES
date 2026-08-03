@@ -1,4 +1,4 @@
-#version 450 core 
+#version 410 core 
 
 
 layout(std140) uniform Uniforms {
