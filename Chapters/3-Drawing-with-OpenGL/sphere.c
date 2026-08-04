@@ -84,22 +84,24 @@ void init_buffers() {
 
 	to_sphere(sphere, 1.0f, q, q);
 
-    	glCreateBuffers(NumBuffers, Buffers);
+    	glGenBuffers(NumBuffers, Buffers);
  
 	/**----------- Inicializar vbo --------*/
-	glNamedBufferStorage(
-		Buffers[vbo], //buffer a usar
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
+	glBufferData(
+		GL_ARRAY_BUFFER, //target
 		vertex_buffer_size, // tamaño total del buffer
 		vertex_data,//data
-		0 //flags
+		GL_STATIC_DRAW //flags
 	);
 
 	/**----------- Inicializar ebo --------*/
-	glNamedBufferStorage(
-		Buffers[ebo],
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[ebo]);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
 		index_buffer_size,
 		indices,
-		0
+		GL_STATIC_DRAW
 	);
 }
 
@@ -109,7 +111,7 @@ void init_vertices() {
 	/**----------- Inicializar Vertices --------*/
 	/** (No cambia con respecto a ejemplos anteriores) */
  
-	glCreateVertexArrays(NumVAOs, VAOs); 
+	glGenVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[vao]);
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
 
@@ -240,7 +242,9 @@ void print_fps(float dt)
 }
 
 int main() {
-	glfwInit(); // Inicializa glfw
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // Inicializa glfw
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Instance Drawing", NULL, NULL);
 	glfwMakeContextCurrent(window);
