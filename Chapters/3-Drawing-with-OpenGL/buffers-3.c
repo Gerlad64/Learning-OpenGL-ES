@@ -53,7 +53,7 @@ void init_buffers() {
 		GL_ARRAY_BUFFER, //target a usar
 		sizeof(positions) + sizeof(colors), // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_DYNAMIC_DRAW | GL_MAP_READ_BIT //flag para poder llenarlo después
+		GL_DYNAMIC_DRAW //flag para poder llenarlo después
 	);
 	
 	/* ----- COLOCAR POSICIONES Y COLORES EN EL BUFFER ----- */
