@@ -47,25 +47,26 @@ static const GLfloat colors[] = {
 void init_buffers() {
 	
 
-    	glCreateBuffers(NumBuffers, Buffers);
-	glNamedBufferStorage(
-		Buffers[ArrayBuffer], //buffer a usar
+    	glGenBuffers(NumBuffers, Buffers);
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
+	glBufferData(
+		GL_ARRAY_BUFFER, //target a usar
 		sizeof(positions) + sizeof(colors), // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT //flag para poder llenarlo después
+		GL_DYNAMIC_DRAW | GL_MAP_READ_BIT //flag para poder llenarlo después
 	);
 	
 	/* ----- COLOCAR POSICIONES Y COLORES EN EL BUFFER ----- */
 	
-	glNamedBufferSubData(
-		Buffers[ArrayBuffer], 	// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
 		0,			//offset
 		sizeof(positions), 	// tamaño
 		positions		// data
 	);
 	
-	glNamedBufferSubData(
-		Buffers[ArrayBuffer], 	// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
 		sizeof(positions),	//offset
 		sizeof(colors), 	// tamaño
 		colors			// data
@@ -109,6 +110,8 @@ void read_buffers_from_ptr_old() {
 
 
 void read_buffers_from_ptr() {
+	printf("glMapNamedBufferRange no existe en esta versión (OpenGL 4.1)\n");
+/**
 	GLfloat* data = glMapNamedBufferRange(
 		Buffers[ArrayBuffer],
 		0,	
@@ -133,11 +136,12 @@ void read_buffers_from_ptr() {
 	else {
 		printf("No se pudo leer del buffer");
 	}
+*/
 }
 
 void init_vertices() {
 	// Crear y enlazar VAO
-	glCreateVertexArrays(NumVAOs, VAOs); 
+	glGenVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[Square]);
 	// Enlazar el buffer para que glVertexAttribPointer lo use
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ArrayBuffer]);
@@ -191,7 +195,9 @@ void display() {
 
 
 int main() {
-	glfwInit(); // Inicializa glfw
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // Inicializa glfw
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "My First Square", NULL, NULL);
 	glfwMakeContextCurrent(window);
