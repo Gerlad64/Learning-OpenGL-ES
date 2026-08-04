@@ -68,45 +68,49 @@ static const GLushort indices[] = {
 
 void init_buffers() {
 		
-    	glCreateBuffers(NumBuffers, Buffers);
+    	glGenBuffers(NumBuffers, Buffers);
  
 	/**----------- Inicializar vbo --------*/
-	glNamedBufferStorage(
-		Buffers[vbo], //buffer a usar
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
+	glBufferData(
+		GL_ARRAY_BUFFER, //target a usar
 		sizeof(positions) + sizeof(colors), // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_DYNAMIC_STORAGE_BIT
+		GL_DYNAMIC_DRAW
 	);
 	
 	/* ----- COLOCAR POSICIONES Y COLORES EN EL BUFFER ----- */
 	
-	glNamedBufferSubData(
-		Buffers[vbo], 		// data
-		0,			//offset
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
+		0,			// offset
 		sizeof(positions), 	// tamaño
 		positions		// data
 	);
 	
-	glNamedBufferSubData(
-		Buffers[vbo], 		// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
 		sizeof(positions),	//offset
 		sizeof(colors), 	// tamaño
 		colors			// data
 	);
 
 	/**----------- Inicializar ebo --------*/
-	glNamedBufferStorage(
-		Buffers[ebo],		// buffer
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ebo]);
+	glBufferData(
+		GL_ARRAY_BUFFER,	// target
 		sizeof(indices),	// tamaño
 		indices,		// data
-		0			// flags (0 --> buffer inmutable)
+		GL_STATIC_DRAW		// flags 
 	);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
 void init_vertices() {
  
-	glCreateVertexArrays(NumVAOs, VAOs); 
+	glGenVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[Triangles]);
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
 
@@ -190,7 +194,9 @@ void display() {
 
 
 int main() {
-	glfwInit(); // Inicializa glfw
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // Inicializa glfw
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Drawing Commands", NULL, NULL);
 	glfwMakeContextCurrent(window);

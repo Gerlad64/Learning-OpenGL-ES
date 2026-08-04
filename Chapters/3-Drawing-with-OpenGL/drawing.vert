@@ -1,4 +1,4 @@
-#version 450 core 
+#version 410 core 
 
 uniform mat4 model_matrix;
 uniform mat4 projection_matrix;
