@@ -96,15 +96,16 @@ void init_buffers() {
 	);
 
 	/**----------- Inicializar ebo --------*/
-	glBindBuffer(GL_ARRAY_BUFFER, Buffers[ebo]);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[ebo]);
 	glBufferData(
-		GL_ARRAY_BUFFER,	// target
+		GL_ELEMENT_ARRAY_BUFFER,// target
 		sizeof(indices),	// tamaño
 		indices,		// data
 		GL_STATIC_DRAW		// flags 
 	);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
