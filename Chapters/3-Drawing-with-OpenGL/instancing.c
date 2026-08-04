@@ -160,47 +160,49 @@ void init_buffers() {
 		colors[n][2] = 0.5f + 0.25f * (sinf(c + 3.0f) + 1.0f);
 	}		
 
-    	glCreateBuffers(NumBuffers, Buffers);
+    	glGenBuffers(NumBuffers, Buffers);
  
 	/**----------- Inicializar vbo --------*/
-	glNamedBufferStorage(
-		Buffers[vbo], //buffer a usar
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
+	glBufferData(
+		GL_ARRAY_BUFFER, //target
 		buffer_size, // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_DYNAMIC_STORAGE_BIT
+		GL_DYNAMIC_DRAW
 	);
 	
 	/* ----- COLOCAR POSICIONES Y COLORES EN EL BUFFER ----- */
 	
-	glNamedBufferSubData(
-		Buffers[vbo], 		// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER,	// target
 		0,			//offset
 		sizeof(positions), 	// tamaño
-		positions		// data
+		positions		// target
 	);
 
-	glNamedBufferSubData(
-		Buffers[vbo], 		// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
 		sizeof(positions),	//offset
 		sizeof(normals), 	// tamaño
-		normals			// data
+		normals			// target
 	);	
 
-	glNamedBufferSubData(
-		Buffers[vbo], 		// data
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 	// target
 		colors_offset,		// offset
 		sizeof(colors), 	// tamaño
-		colors			// data
+		colors			// target
 	);
 
 	/**----------- Inicializar model_matrix_buffer --------*/
 
 	// Se inicializan todas las instancias
-	glNamedBufferStorage(
-		Buffers[model_matrix_buffer], //buffer a usar
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[model_matrix_buffer]);
+	glBufferData(
+		GL_ARRAY_BUFFER, //buffer a usar
 		INSTANCE_COUNT * sizeof(mat4), // tamaño total del buffer
 		NULL, // se inicializa sin datos (se llena con datos más abajo)
-		GL_MAP_WRITE_BIT
+		GL_DYNAMIC_DRAW
 	);
 }
 
@@ -210,7 +212,7 @@ void init_vertices() {
 	/**----------- Inicializar Vertices --------*/
 	/** (No cambia con respecto a ejemplos anteriores) */
  
-	glCreateVertexArrays(NumVAOs, VAOs); 
+	glGenVertexArrays(NumVAOs, VAOs); 
     	glBindVertexArray(VAOs[vao]);
 	glBindBuffer(GL_ARRAY_BUFFER, Buffers[vbo]);
 
@@ -316,8 +318,9 @@ void update(float t) {
 	// disminuye la velocidad de movimiento de los modelos
 	t = t * 0.05; 
 
-	mat4* matrices = (mat4*)glMapNamedBufferRange(
-		Buffers[model_matrix_buffer],
+	glBindBuffer(GL_ARRAY_BUFFER, Buffers[model_matrix_buffer]);
+	mat4* matrices = (mat4*)glMapBufferRange(
+		GL_ARRAY_BUFFER,
 		0,	
 		INSTANCE_COUNT*sizeof(mat4),
 		GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT
@@ -339,7 +342,7 @@ void update(float t) {
 		END_TRANSFORM()
 	}
 
-	glUnmapNamedBuffer(Buffers[model_matrix_buffer]);
+	glUnmapBuffer(GL_ARRAY_BUFFER);
 		
 	mat4 view_matrix;
 	
@@ -350,6 +353,8 @@ void update(float t) {
 	END_TRANSFORM()
 	
 	glUniformMatrix4fv(render_view_matrix_loc, 1, GL_FALSE, view_matrix);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 
@@ -390,14 +395,17 @@ void print_fps(float dt)
 }
 
 int main() {
-	glfwInit(); // Inicializa glfw
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1); // Inicializa glfw
 
 	GLFWwindow* window = glfwCreateWindow(640, 480, "Instance Drawing", NULL, NULL);
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0); // 0 desactiva el límite de FPS, 1 lo activa
 	gl3wInit();
 
 	init();
-	float app_time, last_time, dt;
+	float app_time, last_time = 0, dt;
 	while ( !glfwWindowShouldClose(window)) {
 		app_time = (float)glfwGetTime();
 		dt = app_time-last_time;
