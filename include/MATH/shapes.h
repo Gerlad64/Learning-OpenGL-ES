@@ -35,3 +35,12 @@ typedef struct {
 	      *		https://www.songho.ca/opengl/gl_sphere.html
 */
 void to_sphere(Shape dest, float radius, int stackCount, int sectorCount);
+
+
+#define TORUS_VERTEX_COUNT(sideCount, vertexCount) \
+	(((sideCount) + 1) * ((vertexCount) + 1))
+
+#define TORUS_INDEX_COUNT(sideCount, vertexCount) \
+	(6 * (sideCount) * (vertexCount))
+
+void to_torus(Shape dest, float R, float r, int sideCount, int sectorCount);
